@@ -14,23 +14,24 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/categories")
 public class CategoryController {
-    private final CategoryService categoryService;
+    private final CategoryService service;
 
-    public CategoryController (CategoryService categoryService) {
-        this.categoryService = categoryService;
+    public CategoryController (CategoryService service) {
+        this.service = service;
     }
 
     @GetMapping
-    public ResponseEntity<List<Category>> getAllCategories() {
-        List<Category> categories = categoryService.findAll();
+    public ResponseEntity<List<Category>> findAll() {
+        List<Category> categories = service.findAll();
         if (categories.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok().body(categories);
     }
-// FIXME: Create controller to find Category by ID
-//    @GetMapping("/{id}")
-//    public ResponseEntity<Category> findCategoryById(PathVariable id) {
-//        Category category = categoryService.
-//    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Category> findById(@PathVariable Long id) {
+        Category category = service.findById(id);
+        return ResponseEntity.ok().body(category);
+    }
 }
