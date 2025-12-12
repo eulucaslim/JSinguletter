@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 import java.time.Instant;
-import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 @Profile("local")
@@ -21,8 +21,10 @@ public class TestConfig implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        Category category1 = new Category(null, "Tecnologia", Instant.parse("2024-12-01T10:15:30Z"));
-        Category category2 = new Category(null, "NewsLetter", Instant.parse("2024-12-01T10:15:30Z"));
-        categoryRepository.saveAll(Arrays.asList(category1, category2));
+        Category category1 = new Category(null, "Tecnologia", Instant.now());
+        List<Category> categories = categoryRepository.findByName(category1.getName());
+        if (categories.isEmpty()) {
+            categoryRepository.save(category1);
+        }
     }
 }
