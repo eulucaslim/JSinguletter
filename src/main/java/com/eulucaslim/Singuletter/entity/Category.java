@@ -1,14 +1,18 @@
 package com.eulucaslim.Singuletter.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
 
+import java.io.Serializable;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
 @Table(name = "category")
-public class Category {
+public class Category  implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -19,6 +23,10 @@ public class Category {
     @Column(name = "created_at")
     @CreatedDate
     private Instant createdAt;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
+    private List<News> news = new ArrayList<>();
 
     public Category() {}
 
@@ -32,20 +40,34 @@ public class Category {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public Instant getCreatedAt() {
         return createdAt;
+    }
+
+    public List<News> getNews() {
+        return news;
+    }
+
+    public void addNews(News newsItem) {
+        this.news.add(newsItem);
+        newsItem.setCategory(this);
+    }
+
+    public void removeNews(News newsItem){
+        this.news.remove(newsItem);
+        newsItem.setCategory(null);
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public void setCreatedAt(Instant createdAt) {

@@ -20,12 +20,13 @@ public class News {
     private String content;
 
     @ManyToOne
-    @JoinColumn(name = "category_id", referencedColumnName = "id")
+    @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
     @Column(name = "created_at")
     @CreatedDate
     private Instant createdAt;
+
 
     public News() {}
 
