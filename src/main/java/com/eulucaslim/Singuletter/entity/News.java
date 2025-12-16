@@ -70,9 +70,7 @@ public class News {
         this.createdAt = createdAt;
     }
 
-    public Category getCategory() {
-        return category;
-    }
+    public Category getCategory() { return category; }
 
     public void setCategory(Category category) {
         this.category = category;
