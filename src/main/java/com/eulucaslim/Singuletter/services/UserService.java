@@ -1,6 +1,8 @@
 package com.eulucaslim.Singuletter.services;
 
 import com.eulucaslim.Singuletter.entity.User;
+import com.eulucaslim.Singuletter.exceptions.CredentialsInvalid;
+import com.eulucaslim.Singuletter.exceptions.EntityAlreadyExists;
 import com.eulucaslim.Singuletter.exceptions.NotFoundException;
 import com.eulucaslim.Singuletter.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,7 +21,6 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-
     public List<User> findAll(){
         List<User> users = repository.findAll();
         return users;
@@ -30,14 +31,25 @@ public class UserService {
                 .orElseThrow(() -> new NotFoundException("User " + id + " Not Found!"));
     }
 
-    public void create(User user) {
-        if (!repository.existsByUsername(user.getUsername())) {
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
-            repository.save(user);
-        }
+    public User getByUsername(String username) {
+        return repository.findByUsername(username)
+                .orElseThrow(() -> new NotFoundException("User " + username + " Not Found!"));
     }
 
-    public void update(User user) {
-        repository.save(user);
+    public User register(User user) {
+        if (repository.existsByUsername(user.getUsername())) {
+            throw new EntityAlreadyExists("This User already exists!");
+        }
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        return repository.save(user);
     }
+
+    public boolean authenticate(String passwordRequest, String passwordEncoded) {
+
+        if (!passwordEncoder.matches(passwordRequest, passwordEncoded)){
+            throw new CredentialsInvalid("Credentials Invalid!");
+        }
+        return true;
+    }
+
 }

@@ -5,6 +5,7 @@ import com.eulucaslim.Singuletter.entity.News;
 import com.eulucaslim.Singuletter.entity.User;
 import com.eulucaslim.Singuletter.repository.CategoryRepository;
 import com.eulucaslim.Singuletter.repository.NewsRepository;
+import com.eulucaslim.Singuletter.repository.UserRepository;
 import com.eulucaslim.Singuletter.services.UserService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
@@ -20,19 +21,21 @@ public class TestConfig implements CommandLineRunner {
 
     private final CategoryRepository categoryRepository;
     private final NewsRepository newsRepository;
-    private final UserService userService;
+    private final UserRepository userRepository;
 
 
-    public TestConfig(CategoryRepository categoryRepository, NewsRepository newsRepository, UserService userService) {
+    public TestConfig(CategoryRepository categoryRepository, NewsRepository newsRepository, UserRepository userRepository) {
         this.categoryRepository = categoryRepository;
         this.newsRepository = newsRepository;
-        this.userService = userService;
+        this.userRepository = userRepository;
     }
 
     @Override
     public void run(String... args) throws Exception {
         User user1 = new User(null, "admin", "admin@admin.com", "admin1234");
-        userService.create(user1);
+        if (!userRepository.existsByUsername(user1.getUsername())){
+            userRepository.save(user1);
+        }
 
         Category cat1 = new Category(
                 null,
