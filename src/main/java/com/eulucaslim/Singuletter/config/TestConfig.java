@@ -2,8 +2,10 @@ package com.eulucaslim.Singuletter.config;
 
 import com.eulucaslim.Singuletter.entity.Category;
 import com.eulucaslim.Singuletter.entity.News;
+import com.eulucaslim.Singuletter.entity.User;
 import com.eulucaslim.Singuletter.repository.CategoryRepository;
 import com.eulucaslim.Singuletter.repository.NewsRepository;
+import com.eulucaslim.Singuletter.services.UserService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -18,15 +20,20 @@ public class TestConfig implements CommandLineRunner {
 
     private final CategoryRepository categoryRepository;
     private final NewsRepository newsRepository;
+    private final UserService userService;
 
 
-    public TestConfig(CategoryRepository categoryRepository, NewsRepository newsRepository) {
+    public TestConfig(CategoryRepository categoryRepository, NewsRepository newsRepository, UserService userService) {
         this.categoryRepository = categoryRepository;
         this.newsRepository = newsRepository;
+        this.userService = userService;
     }
 
     @Override
     public void run(String... args) throws Exception {
+        User user1 = new User(null, "admin", "admin@admin.com", "admin1234");
+        userService.create(user1);
+
         Category cat1 = new Category(
                 null,
                 "Tecnologia Nova",

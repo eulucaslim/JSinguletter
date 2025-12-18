@@ -52,16 +52,6 @@ public class Category  implements Serializable {
         return news;
     }
 
-    public void addNews(News newsItem) {
-        this.news.add(newsItem);
-        newsItem.setCategory(this);
-    }
-
-    public void removeNews(News newsItem){
-        this.news.remove(newsItem);
-        newsItem.setCategory(null);
-    }
-
     public void setId(Long id) {
         this.id = id;
     }
