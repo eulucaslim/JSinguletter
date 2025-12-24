@@ -1,18 +1,19 @@
 package com.eulucaslim.Singuletter.mappers;
 
-import com.eulucaslim.Singuletter.dto.UserDTO;
+import com.eulucaslim.Singuletter.dto.requests.RegisterUserRequestDTO;
+import com.eulucaslim.Singuletter.dto.responses.UserResponseDTO;
 import com.eulucaslim.Singuletter.entity.User;
 import org.springframework.stereotype.Component;
 
 @Component
 public class UserMapper {
 
-    public UserDTO toDTO(User user){
-        UserDTO dto = new UserDTO(user.getUsername(), user.getPassword(), user.getPassword());
+    public UserResponseDTO toDTO(User user){
+        UserResponseDTO dto = new UserResponseDTO(user.getId(), user.getUsername(), user.getEmail());
         return dto;
     }
 
-    public User toEntity(UserDTO dto){
+    public User toEntity(RegisterUserRequestDTO dto){
         User user = new User();
         user.setId(null);
         user.setUsername(dto.username());

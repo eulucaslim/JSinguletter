@@ -1,10 +1,12 @@
 package com.eulucaslim.Singuletter.controllers;
 
 
-import com.eulucaslim.Singuletter.dto.NewsDTO;
+import com.eulucaslim.Singuletter.dto.requests.NewsRequestDTO;
+import com.eulucaslim.Singuletter.dto.responses.NewsResponseDTO;
 import com.eulucaslim.Singuletter.entity.News;
 import com.eulucaslim.Singuletter.mappers.NewsMapper;
 import com.eulucaslim.Singuletter.services.NewsService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,8 +39,8 @@ public class NewsController {
     }
 
     @PostMapping
-    public ResponseEntity<NewsDTO> create(@RequestBody NewsDTO newsDTO){
+    public ResponseEntity<NewsResponseDTO> create(@RequestBody NewsRequestDTO newsDTO){
         News news = service.create(newsDTO);
-        return ResponseEntity.ok().body(mapper.toDTO(news));
+        return new ResponseEntity<>(mapper.toDTO(news),HttpStatus.CREATED);
     }
 }
