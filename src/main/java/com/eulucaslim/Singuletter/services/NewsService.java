@@ -1,6 +1,6 @@
 package com.eulucaslim.Singuletter.services;
 
-import com.eulucaslim.Singuletter.dto.NewsDTO;
+import com.eulucaslim.Singuletter.dto.requests.NewsRequestDTO;
 import com.eulucaslim.Singuletter.entity.Category;
 import com.eulucaslim.Singuletter.entity.News;
 import com.eulucaslim.Singuletter.exceptions.NotFoundException;
@@ -35,13 +35,13 @@ public class NewsService {
         return news;
     }
 
-    public News create(NewsDTO newsDTO) {
+    public News create(NewsRequestDTO newsDTO) {
         if (!categoryService.exists(newsDTO.categoryName())) {
             categoryService.create(newsDTO.categoryName());
         }
         Category category = categoryService.getByName(newsDTO.categoryName());
         News news = mapper.toEntity(newsDTO);
         news.setCategory(category);
-        return news;
+        return repository.save(news);
     }
 }
