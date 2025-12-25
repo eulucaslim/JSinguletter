@@ -9,7 +9,9 @@ import com.eulucaslim.Singuletter.services.NewsService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -41,6 +43,11 @@ public class NewsController {
     @PostMapping
     public ResponseEntity<NewsResponseDTO> create(@RequestBody NewsRequestDTO newsDTO){
         News news = service.create(newsDTO);
-        return new ResponseEntity<>(mapper.toDTO(news),HttpStatus.CREATED);
+        URI uri = ServletUriComponentsBuilder
+                .fromCurrentContextPath()
+                .path("/{id}")
+                .buildAndExpand(news.getId())
+                .toUri();
+        return ResponseEntity.created(uri).body(mapper.toDTO(news));
     }
 }

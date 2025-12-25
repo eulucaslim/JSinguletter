@@ -10,11 +10,10 @@ import com.eulucaslim.Singuletter.services.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.Map;
 
 @RestController
@@ -31,9 +30,13 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<UserResponseDTO> register(@Valid @RequestBody RegisterUserRequestDTO userDTO){
-        User user = userMapper.toEntity(userDTO);
-        User userSaved = userService.register(user);
-        return new ResponseEntity<>(userMapper.toDTO(userSaved), HttpStatus.CREATED);
+        User user = userService.register(userMapper.toEntity(userDTO));
+        URI uri = ServletUriComponentsBuilder
+                .fromCurrentContextPath()
+                .path("/users/{id}")
+                .buildAndExpand(user.getId())
+                .toUri();
+        return ResponseEntity.created(uri).body(userMapper.toDTO(user));
     }
 
     @PostMapping("/login")
